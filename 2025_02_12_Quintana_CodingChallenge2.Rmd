@@ -1,0 +1,115 @@
+---
+title: "Quintana - Coding Challenge 2"
+output: html_notebook
+---
+
+#Question 2 - Make a boxplot using ggplot with DON as the y variable, treatment as the x variable, and color mapped to the wheat cultivar. Show the code you use to load the libraries you need to read in the data and make the plot. Change the y label to “DON (ppm)” and make the x label blank
+```{r}
+library(ggplot2)
+
+#load data in
+mycotoxin <- read.csv("C:/Users/there/Desktop/PLPA 5820/Data Visualization/MycotoxinData.csv")
+
+#boxplot
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(mycotoxin$DON), color = Cultivar)) +
+  geom_boxplot() +
+  xlab("") +
+  ylab("DON (ppm)")
+```  
+
+#Question 3 - Now convert this data into a bar chart with standard-error error bars using the stat_summary() command.
+```{r}
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(mycotoxin$DON), color = Cultivar)) +
+  stat_summary(fun = mean, geom = "bar", position = "dodge") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = "dodge") +
+  xlab("") +
+  ylab("DON (ppm)")
+```  
+
+#Question 4 - Add points to the foreground of the boxplot and bar chart you made in question 3 that show the distribution of points over the boxplots. Set the shape = 21 and the outline color black (hint: use jitter_dodge). 
+```{r}
+#For boxplot
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(mycotoxin$DON), color = Cultivar)) +
+  geom_boxplot() +
+  xlab("") +
+  ylab("DON (ppm)") +
+  geom_point(aes(fill = Cultivar), position = position_jitterdodge(), shape = 21, color = "black")
+
+#for barchart
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(mycotoxin$DON), color = Cultivar)) +
+  stat_summary(fun = mean, geom = "bar", position = "dodge") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = "dodge") +
+  xlab("") +
+  ylab("DON (ppm)")+
+  geom_point(aes(fill = Cultivar), position = position_jitterdodge(), shape = 21, color = "black")
+```
+
+#Question 5 - Change the fill color of the points and boxplots to match some colors in the following colorblind pallet
+```{r}
+#for boxplot
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(mycotoxin$DON), color = Cultivar)) +
+  geom_boxplot(color = "#56B4E9") +
+  xlab("") +
+  ylab("DON (ppm)") +
+  geom_point(position = position_jitter(), shape = 21, color = "black", fill = "#F0E442")
+
+#for barchart
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(mycotoxin$DON), color = Cultivar)) +
+  stat_summary(fun = mean, geom = "bar", fill = NA, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = "dodge") +
+  xlab("") +
+  ylab("DON (ppm)")+
+  geom_point(position = position_jitter(), shape = 21, color = "black", fill = "#F0E442")
+```
+
+
+#Question 6 - Add a facet to the plots based on cultivar
+```{r}
+#for boxplot
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(mycotoxin$DON), color = Cultivar)) +
+  geom_boxplot(color = "#56B4E9") +
+  xlab("") +
+  ylab("DON (ppm)") +
+  geom_point(position = position_jitter(), shape = 21, color = "black", fill = "#F0E442") +
+    facet_wrap(~Treatment*Cultivar, scales = "free")
+
+#for barchart
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(mycotoxin$DON), color = Cultivar)) +
+  stat_summary(fun = mean, geom = "bar", fill = NA, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = "dodge") +
+  xlab("") +
+  ylab("DON (ppm)")+
+  geom_point(position = position_jitter(), shape = 21, color = "black", fill = "#F0E442") +
+    facet_wrap(~Treatment*Cultivar, scales = "free")
+```
+
+#Question 7 - Add transparency to the points so you can still see the boxplot or bar in the background. 
+```{r}
+#for boxplot
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(mycotoxin$DON), color = Cultivar)) +
+  geom_boxplot(color = "#56B4E9") +
+  xlab("") +
+  ylab("DON (ppm)") +
+  geom_point(position = position_jitter(), shape = 21, color = "black", fill = "#F0E442", alpha = 0.5) +
+    facet_wrap(~Treatment*Cultivar, scales = "free")
+
+#for barchart
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(mycotoxin$DON), color = Cultivar)) +
+  stat_summary(fun = mean, geom = "bar", fill = NA, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = "dodge") +
+  xlab("") +
+  ylab("DON (ppm)")+
+  geom_point(position = position_jitter(), shape = 21, color = "black", fill = "#F0E442", alpha = 0.5) +
+    facet_wrap(~Treatment*Cultivar, scales = "free")
+```
+
+#Question 8 - Explore one other way to represent the same data https://ggplot2.tidyverse.org/reference/ . Plot them and show the code here. Which one would you choose to represent your data and why? 
+```{r}
+#violin plot
+ggplot(mycotoxin, aes(x = Treatment, y = as.numeric(DON), fill = Cultivar)) +
+  geom_violin(alpha = 0.5, color = "black", scale = "width", trim = FALSE) +
+  geom_jitter(position = position_jitter(width = 0.2), size = 1, alpha = 0.5, color = "black") +
+  xlab("") +
+  ylab("DON (ppm)")
+```
+
